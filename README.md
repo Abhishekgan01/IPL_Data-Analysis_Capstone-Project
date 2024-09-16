@@ -22,11 +22,12 @@ requests
 beautifulsoup4
 pandas
 matplotlib
+plotly
 
 How It Works
 Scraping: The notebook uses web scraping to fetch IPL 2024 auction data for top buys, extracting key information like player names, team, price and type. The data is then saved in a CSV file.
 
 Analysis: The data from the auction is processed using pandas to analyze the auction trends, such as total spending by each team, most expensive players, and player distribution.
 
-Visualization: Visualizations are created using matplotlib and seaborn to display auction trends, such as bar charts showing the top spends or pie charts showing player distribution.
+Visualization: Visualizations are created using matplotlib and plotly to display auction trends, such as bar charts showing the top spends, pie charts showing player distribution, violin, 3D, Boxplot etc.
 
