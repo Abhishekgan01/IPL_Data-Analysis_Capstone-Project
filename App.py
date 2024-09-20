@@ -32,24 +32,26 @@ st.write("\nTotal Funds Spent per Team:\n", funds_spent_per_team)
 # 3. Average Price of Players
 average_price = df1["PRICE"].mean()
 st.write("\nAverage Price of Players: ₹{:.2f}".format(average_price))
+print()
 
 # 4. Total and Average Price by Player Type
 pd.options.display.float_format = '{:,.2f}'.format
 total_by_type = df1.groupby("TYPE")["PRICE"].sum()
 avg_by_type = df1.groupby("TYPE")["PRICE"].mean()
-st.write(total_by_type)
-st.write(avg_by_type)
+st.write("\nTotal Price of Players in each type",total_by_type)
+st.write("\nAverage Price of Players in each type",avg_by_type)
 
 # 5. Highest and Lowest Priced Player per Team
 highest_priced_player = df1.loc[df1.groupby("TEAM")["PRICE"].idxmax()]
 lowest_priced_player = df1.loc[df1.groupby("TEAM")["PRICE"].idxmin()]
-st.write(highest_priced_player[["TEAM", "PLAYER", "TYPE", "PRICE"]])
-st.write(lowest_priced_player[["TEAM", "PLAYER", "TYPE", "PRICE"]])
+st.write("Highest Priced Player in each team",highest_priced_player[["TEAM", "PLAYER", "TYPE", "PRICE"]])
+st.write("Second highest Priced Player in each team",lowest_priced_player[["TEAM", "PLAYER", "TYPE", "PRICE"]])
 
 # 6. Team-wise Spend per Player Type
 spend_by_team_and_type = df1.groupby(["TEAM", "TYPE"])["PRICE"].sum().unstack()
 st.write("\nTeam-wise Spend per Player Type:\n", spend_by_team_and_type)
 
+st.write("###Replacing NAN with 0")
 spend_by_team_and_type.fillna(0, inplace=True)
 spend_by_team_and_type = spend_by_team_and_type.astype(int)
 st.write(spend_by_team_and_type)
