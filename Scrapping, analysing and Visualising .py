@@ -4,6 +4,10 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import matplotlib.pyplot as plt
+import streamlit as st
+
+st.title("Welcome to IPL Analysis")
+st.snow()
 
 url="https://www.iplt20.com/auction"
 r=requests.get(url)
