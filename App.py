@@ -11,80 +11,108 @@ st.snow()
 
 df = pd.read_csv("Scrapped Data from top buys in TATA IPL 2024.csv")
 
-url="https://www.iplt20.com/auction"
-r=requests.get(url)
+url = "https://www.iplt20.com/auction"
+r = requests.get(url)
 
 df1 = pd.read_csv("Scrapped Data from top buys in TATA IPL 2024.csv")
-print(df1[["TEAM", "PLAYER", "TYPE", "PRICE"]])
-print(df1["PRICE"].dtype)
-print(df1["PLAYER"].dtype)
+st.write(df1[["TEAM", "PLAYER", "TYPE", "PRICE"]])
+st.write(df1["PRICE"].dtype)
+st.write(df1["PLAYER"].dtype)
 
 # 1. Total Number of Players per Team
 players_per_team = df1.groupby("TEAM").size()
-print("\nTotal Number of Players per Team:\n", players_per_team)
+st.write("\nTotal Number of Players per Team:\n", players_per_team)
 
-#2.Funds spends per team
+# 2. Funds spent per team
 df1["PRICE"] = df1["PRICE"].astype(str)
-
 df1["PRICE"] = df1["PRICE"].str.replace('₹', '').str.replace(",", "").astype(int)
 funds_spent_per_team = df1.groupby("TEAM")["PRICE"].sum()
-print("\nTotal Funds Spent per Team:\n", funds_spent_per_team)
+st.write("\nTotal Funds Spent per Team:\n", funds_spent_per_team)
 
 # 3. Average Price of Players
 average_price = df1["PRICE"].mean()
-print("\nAverage Price of Players: ₹{:.2f}".format(average_price))
+st.write("\nAverage Price of Players: ₹{:.2f}".format(average_price))
 
 # 4. Total and Average Price by Player Type
 pd.options.display.float_format = '{:,.2f}'.format
 total_by_type = df1.groupby("TYPE")["PRICE"].sum()
 avg_by_type = df1.groupby("TYPE")["PRICE"].mean()
-print(total_by_type)
-print(avg_by_type)
+st.write(total_by_type)
+st.write(avg_by_type)
 
 # 5. Highest and Lowest Priced Player per Team
 highest_priced_player = df1.loc[df1.groupby("TEAM")["PRICE"].idxmax()]
 lowest_priced_player = df1.loc[df1.groupby("TEAM")["PRICE"].idxmin()]
-print(highest_priced_player[["TEAM", "PLAYER", "TYPE", "PRICE"]])
-print()
-print(lowest_priced_player[["TEAM", "PLAYER", "TYPE", "PRICE"]])
+st.write(highest_priced_player[["TEAM", "PLAYER", "TYPE", "PRICE"]])
+st.write(lowest_priced_player[["TEAM", "PLAYER", "TYPE", "PRICE"]])
 
 # 6. Team-wise Spend per Player Type
 spend_by_team_and_type = df1.groupby(["TEAM", "TYPE"])["PRICE"].sum().unstack()
-print("\nTeam-wise Spend per Player Type:\n", spend_by_team_and_type)
+st.write("\nTeam-wise Spend per Player Type:\n", spend_by_team_and_type)
 
-spend_by_team_and_type.fillna(0,inplace=True)
+spend_by_team_and_type.fillna(0, inplace=True)
 spend_by_team_and_type = spend_by_team_and_type.astype(int)
-print(spend_by_team_and_type)
+st.write(spend_by_team_and_type)
 
-players_per_team.plot(kind='bar', title='Total Number of Players per Team', ylabel='Price (₹)')
-plt.show()
+# Plot visualizations in Streamlit
+# 1. Bar plot for Total Number of Players per Team
+st.write("### Total Number of Players per Team")
+fig, ax = plt.subplots()
+players_per_team.plot(kind='bar', title='Total Number of Players per Team', ax=ax)
+st.pyplot(fig)
 
-funds_spent_per_team.plot(kind='bar', title='Total Funds Spent per Team', ylabel='Price (₹)')
+# 2. Bar plot for Total Funds Spent per Team
+st.write("### Total Funds Spent per Team")
+fig, ax = plt.subplots()
+funds_spent_per_team.plot(kind='bar', title='Total Funds Spent per Team', ax=ax)
+st.pyplot(fig)
 
-funds_spent_per_team.plot(kind='pie', autopct='%1.1f%%', title='Distribution of Funds Spent per Team')
+# 3. Pie chart for Funds Distribution per Team
+st.write("### Distribution of Funds Spent per Team")
+fig, ax = plt.subplots()
+funds_spent_per_team.plot(kind='pie', autopct='%1.1f%%', title='Distribution of Funds Spent per Team', ax=ax)
+st.pyplot(fig)
 
-df1["PRICE"] = df1["PRICE"].astype(str) 
+# 4. Histogram for Player Price Distribution
+st.write("### Distribution of Player Prices")
+fig, ax = plt.subplots()
+df1["PRICE"].plot(kind='hist', bins=10, title='Distribution of Player Prices', edgecolor='black', ax=ax)
+st.pyplot(fig)
 
-df1["PRICE"] = df1["PRICE"].str.replace('₹', '').str.replace(",","").astype(int)
-df1["PRICE"].plot(kind='hist', bins=10, title='Distribution of Player Prices', edgecolor='black')
-plt.show()
+# 5. Scatter plot: Price vs Player Type
+st.write("### Price vs Player Type")
+fig = px.scatter(df, x='TYPE', y='PRICE', title='Price vs Player Type')
+st.plotly_chart(fig)
 
-df.plot(kind='scatter', x='TYPE', y='PRICE', title='Price vs Player Type', colorbar="yellow")
+# 6. Bar plot for Highest and Lowest Priced Players per Team
+st.write("### Highest Priced Players per Team")
+fig = px.bar(highest_priced_player, x='PLAYER', y='PRICE', title='Highest Priced Players per Team')
+st.plotly_chart(fig)
 
-highest_priced_player.plot(kind='bar', x='PLAYER', y='PRICE', title='Highest Priced Players per Team')
-lowest_priced_player.plot(kind='bar', x='PLAYER', y='PRICE', title='Lowest Priced Players per Team')
+st.write("### Lowest Priced Players per Team")
+fig = px.bar(lowest_priced_player, x='PLAYER', y='PRICE', title='Lowest Priced Players per Team')
+st.plotly_chart(fig)
 
+# 7. Bar plot for Total Price by Team
+st.write("### Total Price by Team")
 fig = px.bar(df, x='TEAM', y='PRICE', title='Total Price by Team', text='PRICE')
-fig.show()
+st.plotly_chart(fig)
 
+# 8. Violin plot for Price Distribution by Player Type
+st.write("### Price Distribution by Player Type")
 fig = px.violin(df, y='PRICE', x='TYPE', title='Price Distribution by Player Type')
-fig.show()
+st.plotly_chart(fig)
 
-df['PRICE'] = df['PRICE'].astype(str)
+# 9. 3D Scatter plot for Player Price by Team and Type
+st.write("### 3D View of Player Price by Team and Type")
+
+# Ensure PRICE is numerical for scatter plot
 df['PRICE'] = df['PRICE'].str.replace(',', '').astype(float)
-fig = px.scatter_3d(df, x='TEAM', y='TYPE',z='PRICE', color='TYPE', size='PRICE', title='3D View of Player Price by Team and Type')
-fig.show()
 
+fig = px.scatter_3d(df, x='TEAM', y='TYPE', z='PRICE', color='TYPE', size='PRICE', title='3D View of Player Price by Team and Type')
+st.plotly_chart(fig)
+
+# 10. Histogram for Player Price Distribution
+st.write("### Player Price Distribution")
 fig = px.histogram(df, x='PRICE', nbins=10, title='Distribution of Player Prices')
-fig.show()
-
+st.plotly_chart(fig)
