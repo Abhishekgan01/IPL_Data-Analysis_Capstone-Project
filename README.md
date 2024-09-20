@@ -2,6 +2,8 @@
 
                             Scraping, Analyzing, and Visualizing the Data of TATA IPL 2024
 
+  Project Visualization Link:https://ipl-data-analysis-capstone-project.streamlit.app/
+
 ## Project Description:
 
 This project involves web scraping the data of the TATA IPL 2024 auction, followed by analysis and visualization. The project scrapes data of the top buys in the 2024 IPL auction, processes the data into CSV files, and generates insights through data analysis and visualization.
