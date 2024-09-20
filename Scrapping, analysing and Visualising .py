@@ -9,6 +9,8 @@ import streamlit as st
 st.title("Welcome to IPL Analysis")
 st.snow()
 
+df = pd.read_csv("Scrapped Data from top buys in TATA IPL 2024.csv")
+
 url="https://www.iplt20.com/auction"
 r=requests.get(url)
 
